@@ -1,0 +1,89 @@
+---
+title: "Analysing and Visualising COVID-19 pandemic"
+author: "Astha Malhotra"
+date: "10/06/2020"
+output:html_document: 
+   
+editor_options: 
+  chunk_output_type: console
+---
+
+A pneumonia of unknown cause detected in Wuhan, China was first reported to the WHO Country Office in China on 31 December 2019. Coronavirus disease (COVID-19) is an infectious disease caused by a newly discovered coronavirus.
+
+Most people infected with the COVID-19 virus will experience mild to moderate respiratory illness and recover without requiring special treatment.  Older people, and those with underlying medical problems like cardiovascular disease, diabetes, chronic respiratory disease, and cancer are more likely to develop serious illness.
+
+The outbreak was declared a Public Health Emergency of International Concern on 30 January 2020.
+
+On 11 February 2020, WHO announced a name for the new coronavirus disease: COVID-19.
+
+To get the latest data on covid 19, we will use the covid19.analytics package.
+
+
+```{r}
+library(covid19.analytics)
+
+#Data
+ag <- covid19.data(case = "aggregated")
+```
+
+If we observe the last line of the output, we see that the data has been updated as of 9th June 2020, which is the latest data as of the date of this project.
+
+```{r}
+#Lets look at the time series data of confirmed cases
+time_series_confirmed <- covid19.data(case = "ts-confirmed")
+```
+
+We have time series data from 22nd January 2020 to 9th June 2020.
+
+For Summary report.
+
+```{r, fig.width=15, fig.asp=1.00}
+report.summary(Nentries = 10, 
+               graphical.output = T)
+
+```
+
+We see that we get data from all the categories.
+
+
+```{r,fig.width=15, fig.asp= 1.00}
+#Totals per location
+ 
+tots.per.location(time_series_confirmed, geo.loc = "US")
+
+```
+
+We see that there are 3 different models fitted on to the data.
+
+The most interesting seems to be the non-linear model. We see a convex pattern, showing an increading trend and then we see a concave pattern signifying a decreasing trend.
+
+Lets analyse the growth rate for USA
+
+```{r, fig.width = 15, fig.asp = 0.9}
+#Growth rate
+
+growth.rate(time_series_confirmed, geo.loc = "US")
+```
+
+This plot has 2 y axis- the first axis shows changes on a regular scale,
+the second axis is in a log scale. The graph on the top shows the log cases while the one on the bottom is for the regular scale.
+
+The number of changes are hovering around 30,000 at present and we can see a slight downward trend in the graph towards the end signifying stabilization and the decline in the number of new cases. 
+
+Let's import all time series data-
+
+
+```{r}
+time_series_all <- covid19.data(case = 'ts-ALL')
+
+#We will use the all data for a totals plot
+
+totals.plt(time_series_all)
+```
+
+```{r, echo=FALSE}
+live.map(time_series_confirmed)
+```
+
+
+
